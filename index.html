@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Converter</title>
+</head>
+<body>
+    <h1>Currency Converter</h1>
+    
+    <form id="currencyForm">
+        <label for="from_currency">From Currency:</label>
+        <input type="text" id="from_currency" name="from_currency" required>
+        
+        <label for="to_currency">To Currency:</label>
+        <input type="text" id="to_currency" name="to_currency" required>
+        
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" name="amount" required>
+        
+        <button type="button" onclick="convertCurrency()">Convert</button>
+    </form>
+    
+    <h3 id="result"></h3>
+
+    <script>
+        function convertCurrency() {
+            var form = document.getElementById('currencyForm');
+            var resultElement = document.getElementById('result');
+
+            fetch('/convert', {
+                method: 'POST',
+                body: new FormData(form),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    resultElement.textContent = 'Error: ' + data.error;
+                } else {
+                    resultElement.textContent = 'Converted Amount: ' + data.converted_amount;
+                }
+            })
+            .catch(error => {
+                resultElement.textContent = 'Error: Unable to fetch data';
+            });
+        }
+    </script>
+</body>
+</html>
